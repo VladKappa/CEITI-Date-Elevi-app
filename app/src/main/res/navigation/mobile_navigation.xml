@@ -7,19 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="kek.kappa.ceitidate.ui.home.HomeFragment"
+        android:name="kek.kappa.ceitidate.ui.home.FragmentMain"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="kek.kappa.ceitidate.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="kek.kappa.ceitidate.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_main" />
 </navigation>

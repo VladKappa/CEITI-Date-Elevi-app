@@ -1,5 +1,6 @@
 package kek.kappa.ceitidate;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
@@ -28,7 +29,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class Elev {
+public class Elev extends MainActivity {
     String idnp;
     String date_html;
     DateElev date;
@@ -79,7 +80,9 @@ public class Elev {
                                 MainActivity.pb.setVisibility(View.GONE);
                                 MainActivity.idnp_input.setText("");
                             }
+
                         });
+                        MainActivity.init();
                     }
             }});
     }
@@ -91,11 +94,6 @@ public class Elev {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-        try {
-            Log.d("JSON",getJSON().toString(2));
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 
