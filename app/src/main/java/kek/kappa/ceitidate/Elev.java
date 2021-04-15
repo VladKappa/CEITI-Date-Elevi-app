@@ -1,6 +1,7 @@
 package kek.kappa.ceitidate;
 
 import android.util.Log;
+import android.view.View;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -16,9 +17,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -52,7 +51,7 @@ public class Elev {
 
         StringBuilder data = new StringBuilder();
         data.append("idnp=");
-        data.append("IDNP");
+        data.append(idnp);
 
         RequestBody body = RequestBody.create(data.toString(), html);
 
@@ -73,6 +72,14 @@ public class Elev {
                         date_html = response.body().string();
                         date = new DateElev(date_html);
                         printDate();
+
+                        MainActivity.pb.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                MainActivity.pb.setVisibility(View.GONE);
+                                MainActivity.idnp_input.setText("");
+                            }
+                        });
                     }
             }});
     }
@@ -86,7 +93,6 @@ public class Elev {
             }
         }
         try {
-            System.out.println(getJSON().toString(2));
             Log.d("JSON",getJSON().toString(2));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -100,7 +106,6 @@ public class Elev {
         public DateElev(String html) {
             this.soup = Jsoup.parse(html);
             try {
-                System.out.println("JSONIFYING");
                 JSONify();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -115,18 +120,8 @@ public class Elev {
             return this.DateJSON;
         }
 
-        //Hack to create ordered JSON Object :D
-        private JSONObject OrderedJSONObject() throws JSONException, NoSuchFieldException, IllegalAccessException {
-            JSONObject obj = new JSONObject();
-//                Field changeMap = obj.getClass().getDeclaredField("map");
-//                changeMap.setAccessible(true);
-//                changeMap.set(obj, new LinkedHashMap<>());
-//                changeMap.setAccessible(false);
-            return obj;
-        }
-
         private void JSONify() throws IllegalAccessException, NoSuchFieldException, JSONException {
-            DateJSON = OrderedJSONObject();
+            DateJSON = new JSONObject();
             String[] atribute = getAttributes();
             for (String atribut : atribute) {
                 String nume_titlu = soup.select("a[aria-controls=" + atribut + "]").text();
@@ -135,7 +130,7 @@ public class Elev {
                     Elements nume_subcategorii = soup.select("#" + atribut + " .panel-title");
                     Elements tabele = soup.select("#" + atribut + " div[role=tabpanel] table");
                     ArrayList<String> HeaderNames = new ArrayList<>();
-                    JSONObject subcategorii = OrderedJSONObject();
+                    JSONObject subcategorii = new JSONObject();
                     for (int i = 0; i < nume_subcategorii.toArray().length; i++) {
                         JSONArray JSONArrayRow = new JSONArray();
                         Elements rows = tabele.get(i).select("tr");
@@ -153,12 +148,12 @@ public class Elev {
                             {
                                 JSONObject AbsenteOBJ = new JSONObject();
                                 JSONArray AbsenteArr = new JSONArray();
-                                JSONObject AbsenteOBJrow = OrderedJSONObject();
+                                JSONObject AbsenteOBJrow = new JSONObject();
                                 AbsenteOBJrow.put(HeaderNames.get(0),HeaderNames.get(1));
                                 r = r.nextElementSibling();
                                 AbsenteArr.put(AbsenteOBJrow);
                                 for (int j=0;j<3;j++){
-                                    AbsenteOBJrow = OrderedJSONObject();
+                                    AbsenteOBJrow = new JSONObject();
                                     Elements TableData = r.select("td");
                                     AbsenteOBJrow.put(TableData.get(0).text(),TableData.get(1).text());
                                     AbsenteArr.put(AbsenteOBJrow);
@@ -170,7 +165,7 @@ public class Elev {
                             }
 
                             Elements TableData = r.select("td");
-                            JSONObject DataObject = OrderedJSONObject();
+                            JSONObject DataObject = new JSONObject();
                             for (int j = 0; j < TableData.toArray().length; j++) {
                                 if (HeaderNames.get(j).equals("Semestrul II"))
                                     HeaderNames.set(j,"Denumire");
@@ -203,7 +198,7 @@ public class Elev {
                 if(atribut.equals("date-personale"))
                 {
                     Elements rows = tabel.select("tr");
-                    JSONObject DatePersonale = OrderedJSONObject();
+                    JSONObject DatePersonale = new JSONObject();
                     for (Element r : rows)
                         DatePersonale.put(r.child(0).text(),r.child(1).text());
                     DateJSON.put(nume_titlu,DatePersonale);
@@ -213,7 +208,7 @@ public class Elev {
                 ArrayList<String> HeaderNames = new ArrayList<>();
                 JSONArray Arr = new JSONArray();
                 for (Element r : rows) {
-                    JSONObject Obj = OrderedJSONObject();
+                    JSONObject Obj = new JSONObject();
                     // We get the <th> header names
                     if (!r.select("th").isEmpty()) {
                         HeaderNames.clear();
