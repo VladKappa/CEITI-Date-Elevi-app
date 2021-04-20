@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
+<!--
+            Deoarece api.ceiti.md nu suporta HTTPS, trebuie sa indicam ca permitem
+            trafic ClearText catre aceasta adresa, altfel nu vom putea executa
+            requesturi.
+-->
         <domain includeSubdomains="true">api.ceiti.md</domain>
     </domain-config>
 </network-security-config>

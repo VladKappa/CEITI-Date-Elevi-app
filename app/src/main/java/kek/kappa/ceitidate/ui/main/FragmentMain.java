@@ -1,10 +1,9 @@
-package kek.kappa.ceitidate.ui.home;
+package kek.kappa.ceitidate.ui.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,12 +21,10 @@ public class FragmentMain extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         mainViewModel =
                 new ViewModelProvider(this).get(MainViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_main, container, false);
-        final TextView textView = root.findViewById(R.id.text_main);
+        View root = inflater.inflate(R.layout.fragment_content_main, container, false);
         mainViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
             }
         });
         return root;

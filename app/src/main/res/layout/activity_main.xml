@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="136dp"
         android:text="Introduceti IDNP-ul"
-        android:textColor="@color/black"
+        android:textColor="?attr/textColor"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,6 +27,7 @@
         android:ellipsize="start"
         android:ems="10"
         android:gravity="center_horizontal"
+        android:textColor="?attr/textColor"
         android:hint="IDNP"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -40,6 +41,7 @@
         android:layout_height="wrap_content"
         android:onClick="sendIDNP"
         android:text="Trimite"
+        android:textColor="?attr/textColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.412"
@@ -56,13 +58,14 @@
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_white" />
+        app:srcCompat="?attr/Logo" />
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
         android:layout_width="266dp"
         android:layout_height="259dp"
+        android:translationZ="4dp"
+        android:indeterminateDrawable="@drawable/progress_style"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

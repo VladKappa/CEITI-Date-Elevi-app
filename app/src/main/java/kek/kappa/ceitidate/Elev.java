@@ -1,7 +1,5 @@
 package kek.kappa.ceitidate;
 
-import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -42,9 +40,9 @@ public class Elev extends MainActivity {
         return date.getJSON();
     }
 
-    public void getDate() throws JSONException {
+    public void processIDNP() throws JSONException {
         CookieJar cookieJar =
-                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(MainActivity.c));
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(MainActivity.context));
         OkHttpClient client = new OkHttpClient().newBuilder().followRedirects(true)
                 .cookieJar(cookieJar)
                 .build();
@@ -74,15 +72,15 @@ public class Elev extends MainActivity {
                         date = new DateElev(date_html);
                         printDate();
 
-                        MainActivity.pb.post(new Runnable() {
+                        MainActivity.ProgressBar.post(new Runnable() {
                             @Override
                             public void run() {
-                                MainActivity.pb.setVisibility(View.GONE);
+                                MainActivity.ProgressBar.setVisibility(View.GONE);
                                 MainActivity.idnp_input.setText("");
                             }
 
                         });
-                        MainActivity.init();
+                        MainActivity.initContent();
                     }
             }});
     }
@@ -90,7 +88,7 @@ public class Elev extends MainActivity {
     public void printDate() {
         if (this.date_html == null) {
             try {
-                getDate();
+                processIDNP();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -184,7 +182,7 @@ public class Elev extends MainActivity {
                                 DataObject.put(HeaderNames.get(j), TableData.get(j).text());
                             }
 
-                            if (!DataObject.toString().isEmpty())
+                            if (!(DataObject.length() == 0))
                                 JSONArrayRow.put(DataObject);
                         }
                         subcategorii.put(nume_subcategorii.get(i).text(), JSONArrayRow);
@@ -218,9 +216,11 @@ public class Elev extends MainActivity {
                     Elements TableData = r.select("td");
 
                     for (int j = 0; j < TableData.toArray().length; j++) {
+                        if (HeaderNames.get(j).equals("Denumirea Obiectelor"))
+                            HeaderNames.set(j,"Denumire Obiect");
                         Obj.put(HeaderNames.get(j), TableData.get(j).text());
                     }
-                    if (!Obj.toString().isEmpty())
+                    if (!(Obj.length() == 0))
                         Arr.put(Obj);
                 }
                 DateJSON.put(nume_titlu,Arr);
