@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
         ProgressBar = findViewById(R.id.progressBar);
         idnp_input = findViewById(R.id.idnp_input);
         act = this;
+
+
+        //initContent();
     }
 
     public void sendIDNP(View view) {

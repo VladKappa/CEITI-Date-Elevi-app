@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -18,11 +19,40 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="413dp"
-        android:layout_height="675dp"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="130dp"
+        tools:layout_editor_absoluteY="247dp"
+        />
+
+<!--    <ru.dimorinny.floatingtextbutton.FloatingTextButton-->
+<!--        android:id="@+id/kek_xd"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:floating_background_color="?attr/colorPrimary"-->
+<!--        app:floating_title="TEST"-->
+<!--        app:floating_title_color="?attr/textColor"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/nav_host_fragment"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/nav_host_fragment"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/nav_host_fragment"-->
+<!--        app:layout_constraintHorizontal_bias="0.95"-->
+<!--        app:layout_constraintVertical_bias="0.98"-->
+<!--        android:layout_marginBottom="20dp" />-->
+
+<!--    <ru.dimorinny.floatingtextbutton.FloatingTextButton-->
+<!--        android:id="@+id/kek_xd2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="24dp"-->
+<!--        app:floating_background_color="?attr/colorPrimary"-->
+<!--        app:floating_title="TEST"-->
+<!--        app:floating_title_color="?attr/textColor"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/kek_xd"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/nav_host_fragment"-->
+<!--        app:layout_constraintHorizontal_bias="0.951"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/nav_host_fragment" />-->
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
