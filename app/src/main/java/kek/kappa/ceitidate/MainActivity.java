@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         act = this;
 
 
-        //initContent();
     }
 
     public void sendIDNP(View view) {

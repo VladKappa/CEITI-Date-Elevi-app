@@ -1,30 +1,22 @@
 package kek.kappa.ceitidate;
 
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,7 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 
@@ -45,15 +36,12 @@ public class DateActivity extends AppCompatActivity implements NavigationView.On
 
     private AppBarConfiguration mAppBarConfiguration;
 
-    static TextView home_text;
     static NavigationView navigationView;
     static Toolbar toolbar;
     static DrawerLayout drawer;
     static JSONObject elev;
     static RecyclerView rec;
-    static TextView tx;
     static ArrayList<Integer> addedViews;
-    static String Submenu = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +74,11 @@ public class DateActivity extends AppCompatActivity implements NavigationView.On
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getApplicationContext());
         rec.setLayoutManager(manager);
 
+
         elev = MainActivity.elev.getJSON();
+
+
+
         try {
             for (int i = 0; i < elev.names().length(); i++) {
                 navigationView.getMenu().add(elev.names().getString(i));
@@ -97,7 +89,7 @@ public class DateActivity extends AppCompatActivity implements NavigationView.On
         }
         navigationView.getMenu().add(Menu.NONE, 69, Menu.NONE, "Ieșire");
 
-        setItemData(navigationView.getMenu().getItem(0), null);
+        setActivityData(navigationView.getMenu().getItem(0), null);
         navigationView.setCheckedItem(0);
         navigationView.getMenu().getItem(0).setChecked(true);
 
@@ -111,9 +103,9 @@ public class DateActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+        Toast.makeText(getBaseContext(), "Mai apasa odata BACK pentru a iesi!", Toast.LENGTH_SHORT).show();
         if (System.currentTimeMillis() - backLastPressed < THRESHOLD) {
             finish();
-            // TODO: Register double-tapped BACK button, put your "exit" code here
             backLastPressed = 0;
             return;
         }
@@ -128,18 +120,20 @@ public class DateActivity extends AppCompatActivity implements NavigationView.On
                 || super.onSupportNavigateUp();
     }
 
+    // Verifica daca JSONObject-ul dat ca paramentru are ca value
+    // un JSONArray, ceea ce inseamna ca sunt submeniuri
     private boolean hasSubmenus(JSONObject obj) {
         try {
             if (obj.getJSONArray(obj.names().getString(0)) instanceof JSONArray) {
                 return true;
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception e) { }
         return false;
     }
 
-    public void setItemData(MenuItem itm, String selectedsubmenu) {
+    public void setActivityData(MenuItem itm, String selectedsubmenu) {
         ConstraintLayout constraintLayout = findViewById(R.id.content_layout);
+
 
         if (addedViews != null && addedViews.size() > 0)
             for (int i = 0; i < addedViews.size(); i++) {
@@ -150,8 +144,8 @@ public class DateActivity extends AppCompatActivity implements NavigationView.On
 
         try {
 
-            DateAdapter dateAdapter;
             Object obj = elev.get(itm.getTitle().toString());
+            DateAdapter dateAdapter;
             boolean hasSubmenus;
             try {
                 hasSubmenus = hasSubmenus(new JSONObject(elev.getJSONObject(itm.getTitle().toString()).toString()));
@@ -174,13 +168,19 @@ public class DateActivity extends AppCompatActivity implements NavigationView.On
 
                     butoane[i].setId(i + 420); // ma asigur ca o sa aiba un id unic, hz lol
 
-
-                    butoane[i].setBackgroundColor(R.attr.colorPrimaryVariant);
                     String value = elev.getJSONObject(itm.getTitle().toString()).names().getString(i);
                     if (selectedsubmenu == null)
                         selectedsubmenu = value;
                     butoane[i].setTitle(value);
-                    butoane[i].setTitleColor(R.attr.textColor);
+
+                    butoane[i].setTitleColor(Color.argb(150,255, 255, 255));
+                    butoane[i].setBackgroundColor(Color.argb(150,100, 100, 255));
+
+                    if (butoane[i].getTitle() == selectedsubmenu) {
+                        butoane[i].setTitleColor(Color.argb(150,0, 0, 0));
+                        butoane[i].setBackgroundColor(Color.argb(150,255, 255, 255));
+                    }
+
                     butoane[i].setForegroundGravity(Gravity.CENTER); // This line does nothing but I'll leave it here just for lulz
 
                     constraintLayout.addView(butoane[i]);
@@ -207,11 +207,13 @@ public class DateActivity extends AppCompatActivity implements NavigationView.On
                     butoane[i].setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            setItemData(itm, value);
+                            setActivityData(itm, value);
                         }
                     });
                 }
             }
+
+
             if (obj instanceof JSONObject) {
                 if (selectedsubmenu != null)
                     dateAdapter = new DateAdapter(elev.getJSONObject(itm.getTitle().toString()).getJSONArray(selectedsubmenu));
@@ -232,17 +234,27 @@ public class DateActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == 69)
+        // Daca este selectat butonul magic (Iesire), atunci finisam activitatea.
+        if (menuItem.getItemId() == 69) {
             finish();
+            return false;
+        }
 
+        // Parcurgem si deselectam toate item-urile din navigationview menu
         for (int i = 0; i < navigationView.getMenu().size(); i++)
             navigationView.getMenu().getItem(i).setChecked(false);
 
+        // Setam ca marcat menuitem-ul selectat
         navigationView.setCheckedItem(menuItem.getItemId());
         menuItem.setChecked(true);
 
-        setItemData(menuItem, null);
+        // Setam datele in RecyclerView pentru itemul selectat
+
+        setActivityData(menuItem, null);
+        // Setam titlul in appbar
         toolbar.setTitle(menuItem.getTitle());
+
+        // Inchidem "saltariu"
         drawer.close();
 
         return true;

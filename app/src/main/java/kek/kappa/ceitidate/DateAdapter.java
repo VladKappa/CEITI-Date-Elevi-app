@@ -8,12 +8,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 public class DateAdapter extends RecyclerView.Adapter<DateAdapter.MyViewHolder> {
     private JSONObject jsonobj = null;
@@ -40,16 +39,47 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull DateAdapter.MyViewHolder holder, int position) {
         try {
             if (jsonobj != null) {
-                holder.textview.setText(jsonobj.names().getString(position));
-                holder.textview.setText(holder.textview.getText() + "\n" + jsonobj.get(jsonobj.names().getString(position)).toString());
+                holder.CardTextView.append(jsonobj.names().getString(position));
+                holder.CardTextView.append("\n" + jsonobj.get(jsonobj.names().getString(position)).toString());
             } else if (jsonarr != null) {
                 JSONObject jsonobj = jsonarr.getJSONObject(position);
                 for (int i = 0; i < jsonobj.length(); i++) {
-                    if(i==0)
-                        holder.textview.setText(jsonobj.names().getString(i));
+
+                    // Daca este primul element(primul titlu), nu inseram un newline la inceput
+                    if (i == 0)
+                        holder.CardTextView.setText(jsonobj.names().getString(i));
                     else
-                        holder.textview.setText(holder.textview.getText() + "\n" + jsonobj.names().getString(i));
-                    holder.textview.setText(holder.textview.getText() + "\n" + jsonobj.get(jsonobj.names().getString(i)).toString());
+                        holder.CardTextView.append("\n" + jsonobj.names().getString(i));
+
+                    Object check = jsonobj.get(jsonobj.names().getString(i));
+                    if (check instanceof JSONArray) {
+                        // In caz ca avem de aface cu un JSONArray ca value, atunci il parcurgem (Note)
+                        JSONArray Values = jsonobj.getJSONArray(jsonobj.names().getString(i));
+
+                        Object isabsente = Values.get(i);
+                        if(isabsente instanceof JSONObject)
+                        {
+                            for (int j=0;j<Values.length();j++) {
+                                JSONObject Absente = Values.getJSONObject(j);
+                                holder.CardTextView.append("\n" + Absente.names().getString(0));
+                                holder.CardTextView.append("\n" + Absente.get(Absente.names().getString(0)).toString());
+                            }
+
+                        }
+                        else {
+                            holder.CardTextView.append("\n");
+                            for (int j = 0; j < Values.length(); j++) {
+                                holder.CardTextView.append(Values.getString(j));
+                                if (j != Values.length() - 1)
+                                    holder.CardTextView.append(", ");
+                            }
+
+                        }
+                        continue;
+                    }
+
+                    // Daca nu este JSONArray, atunci il afisam asa.
+                    holder.CardTextView.append("\n" + jsonobj.get(jsonobj.names().getString(i)).toString());
                 }
             }
         } catch (JSONException e) {
@@ -67,11 +97,11 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView textview;
+        private TextView CardTextView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            textview = itemView.findViewById(R.id.title);
+            CardTextView = itemView.findViewById(R.id.CardTextView);
         }
     }
 }
