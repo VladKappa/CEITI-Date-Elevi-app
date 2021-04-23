@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">CEITI Date Elevi</string>
+    <string name="app_name">Date Elevi</string>
     <string name="title_activity_date">DateActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Deschide saltariu</string>
+    <string name="navigation_drawer_close">Inchide saltariu</string>
     <string name="nav_header_title">Date Elev</string>
     <string name="nav_header_desc">Navigation header</string>
 
