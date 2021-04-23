@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     static TextView idnp_input;
     static Elev elev;
     static Activity act;
+    static TextView label;
+    static Button btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,27 @@ public class MainActivity extends AppCompatActivity {
         idnp_input = findViewById(R.id.idnp_input);
         act = this;
 
+        label = findViewById(R.id.idnp_label);
+        btn = findViewById(R.id.idnp_btn);
+    }
 
+    public static void changeViewVisibility(boolean hide)
+    {
+        if(hide)
+        {
+            ProgressBar.setVisibility(View.VISIBLE);
+            ProgressBar.bringToFront();
+
+
+            label.setVisibility(View.GONE);
+            btn.setVisibility(View.GONE);
+            idnp_input.setVisibility(View.GONE);
+            return;
+        }
+
+        label.setVisibility(View.VISIBLE);
+        btn.setVisibility(View.VISIBLE);
+        idnp_input.setVisibility(View.VISIBLE);
     }
 
     public void sendIDNP(View view) {
@@ -54,15 +76,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Aratam widget-ul cu progresul
-        ProgressBar.setVisibility(View.VISIBLE);
-        ProgressBar.bringToFront();
 
-        // Hai sa ascundem si celelalte elemente din spatele widget-ului cu progresul
-        idnp_input.setVisibility(View.GONE);
-        TextView label = findViewById(R.id.idnp_label);
-        label.setVisibility(View.GONE);
-        Button btn = findViewById(R.id.idnp_btn);
-        btn.setVisibility(View.GONE);
+
+        changeViewVisibility(true);
 
         // Hide the keyboard
         if (view != null) {

@@ -78,7 +78,6 @@ public class DateActivity extends AppCompatActivity implements NavigationView.On
         elev = MainActivity.elev.getJSON();
 
 
-
         try {
             for (int i = 0; i < elev.names().length(); i++) {
                 navigationView.getMenu().add(elev.names().getString(i));

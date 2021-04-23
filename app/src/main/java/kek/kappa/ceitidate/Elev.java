@@ -62,7 +62,7 @@ public class Elev extends MainActivity {
             client.newCall(req).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    e.printStackTrace();
+                    changeViewVisibility(false);
                 }
 
                 @Override
@@ -70,30 +70,20 @@ public class Elev extends MainActivity {
                     if (response.isSuccessful()){
                         date_html = response.body().string();
                         date = new DateElev(date_html);
-                        printDate();
 
                         MainActivity.ProgressBar.post(new Runnable() {
                             @Override
                             public void run() {
                                 MainActivity.ProgressBar.setVisibility(View.GONE);
-                                MainActivity.idnp_input.setText("");
                             }
 
                         });
+                        finish();
                         MainActivity.initContent();
                     }
             }});
     }
 
-    public void printDate() {
-        if (this.date_html == null) {
-            try {
-                processIDNP();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     private static class DateElev {
         Document soup;
