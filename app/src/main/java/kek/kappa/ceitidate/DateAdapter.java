@@ -8,8 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.JsonObject;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
