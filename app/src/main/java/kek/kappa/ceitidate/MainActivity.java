@@ -8,11 +8,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import org.json.JSONException;
 
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     static Context context;
     static ProgressBar ProgressBar;
-    static TextView idnp_input;
+    static EditText idnp_input;
     static Elev elev;
     static Activity act;
     static TextView label;
