@@ -1,6 +1,7 @@
 package kek.kappa.ceitidate;
 
 import android.view.View;
+import android.widget.Toast;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -40,7 +41,7 @@ public class Elev extends MainActivity {
         return date.getJSON();
     }
 
-    public void processIDNP() throws JSONException {
+    public void processIDNP() {
         CookieJar cookieJar =
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(MainActivity.context));
         OkHttpClient client = new OkHttpClient().newBuilder().followRedirects(true)
@@ -62,13 +63,31 @@ public class Elev extends MainActivity {
             client.newCall(req).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    changeViewVisibility(false);
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            changeViewVisibility(false);
+                            showToast("Nu am putut contacta host-ul!\nVerifica accesul la internet!");
+                        }
+                    }.start();
                 }
 
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     if (response.isSuccessful()){
+
                         date_html = response.body().string();
+
+                        if(date_html.contains("IDNP format din 13 cifre")) {
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    changeViewVisibility(false);
+                                    showToast("IDNP Gresit :^(");
+                                }
+                            }.start();
+                            return;
+                        }
                         date = new DateElev(date_html);
 
                         MainActivity.ProgressBar.post(new Runnable() {
