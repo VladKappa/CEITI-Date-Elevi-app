@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -48,8 +49,20 @@ public class MainActivity extends AppCompatActivity {
         btn = findViewById(R.id.idnp_btn);
     }
 
-    public static void changeViewVisibility(boolean hide)
+    public void showToast(String message){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void changeViewVisibility(boolean hide)
     {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
         if(hide)
         {
             ProgressBar.setVisibility(View.VISIBLE);
@@ -62,22 +75,21 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        ProgressBar.setVisibility(View.GONE);
         label.setVisibility(View.VISIBLE);
         btn.setVisibility(View.VISIBLE);
         idnp_input.setVisibility(View.VISIBLE);
+
+            }
+        });
     }
 
     public void sendIDNP(View view) {
         elev = new Elev(idnp_input.getText().toString());
-        try {
-            elev.processIDNP();
-        } catch (JSONException jsonException) {
-            jsonException.printStackTrace();
-        }
+
+        elev.processIDNP();
 
         // Aratam widget-ul cu progresul
-
-
         changeViewVisibility(true);
 
         // Hide the keyboard
